@@ -5,38 +5,36 @@ INC =		ft_ssl.h
 SRC =		testssl.c \
 			check_err.c \
 			flags.c \
-			init_structs.c \
+			structs.c \
 			input_args.c \
 			main.c \
 			md5.c \
 			padding.c \
 			md5_rounds.c \
+			sha256.c \
+			sha256_rounds.c \
 
 OBJ = $(SRC:.c=.o)
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 all: $(NAME)
 
-$(NAME): libft_compile
-	@gcc $(CFLAGS) -c $(SRC)
+$(OBJ): $(SRC)
+	@gcc $(CFLAGS) -c $(SRC) -Ilibft/
+
+$(NAME): $(OBJ) libft_compile
 	@gcc $(CFLAGS) $(OBJ) ./libft/libft.a -o $(NAME)
 
 libft_compile:
-	@+$(MAKE) -C ./libft
+	@+$(MAKE) -C libft/
 
-libft_clean:
-	@+$(MAKE) clean -C ./libft
-
-libft_fclean:
-	@+$(MAKE) fclean -C ./libft
-
-clean:	libft_clean
+clean:
 	@/bin/rm -rf $(OBJ)
 
-fclean:	clean libft_fclean
+fclean:	clean
 	@/bin/rm -rf ft_ssl
+	@+$(MAKE) fclean -C libft/
 
 re:	fclean	all
 
-.PHONY: all clean fclean re libft_clean libft_compile libft_fclean

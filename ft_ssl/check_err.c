@@ -45,7 +45,10 @@ char       *check_error(int argc, char **argv)
     input = NULL;
     ret = 0;
     if (argc == 2)
+    {
         input = open_stream();
+        //printf("input is %s\n", input);
+    }
     if (argc == 3)   
     {
         if ((ft_strequ("-s",argv[2])) == 0)

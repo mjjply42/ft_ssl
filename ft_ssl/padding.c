@@ -1,30 +1,34 @@
 #include "ft_ssl.h"
 
-/*int        pad_check(ULL len)
+int        pad_check(unsigned long long len)
 {
-   ULL a;
+   unsigned long long a;
 
     a = 1;
-    printf("LEN is %llu\n", len);
     while (a * 512 < (len + 64 + 1))
         a += 1;
     return (a * 512 - len - 64 -1);
 }
 
-void       padding(ULL pre_pad_size, m_s *pre_image)
+m_s       *padding(m_s *pre_image)
 {
-    ULL padding;
-    unsigned char *new_length;
-    ULL bit_padding;
+    unsigned long long padding;
+    unsigned char new_length[128];
+    unsigned long long bit_padding;
+    unsigned int *hash_result;
 
-    padding = pad_check(pre_pad_size);
-    printf("Padding is %llu\n", padding);
-    bit_padding =  (pre_pad_size + 64 + 1 + padding);
-    new_length = (unsigned char*)ft_strnew( sizeof(unsigned char) * 64);
-    ft_memcpy(new_length, ((pre_image->STREAMS) ? pre_image->stream : pre_image->input),\
-     (pre_pad_size / 8));
-    new_length[pre_pad_size / 8] = 0x80;
-    ft_memset(new_length + (pre_pad_size / 8), 0, (padding / 8));
-    ft_memcpy(new_length + (pre_pad_size / 8) + (padding / 8), &pre_pad_size, sizeof(ULL));
-    md5_hash(new_length, bit_padding);
-}*/
+    ft_bzero(new_length, 127);
+    padding = pad_check(pre_image->bit_size);
+    bit_padding = (pre_image->bit_size + 64 + 1 + padding);
+    ft_memcpy(&new_length, ((pre_image->STREAMS) ? pre_image->stream : pre_image->input),\
+     (pre_image->bit_size / 8));
+    new_length[pre_image->bit_size / 8] = 0x80;
+    ft_bzero(new_length + (pre_image->bit_size / 8) + 1, (padding / 8));
+    ft_memcpy((new_length + (pre_image->bit_size / 8 + 1) + (padding / 8)), (unsigned long long *)&pre_image->bit_size, 8);
+    pre_image->digest = (unsigned char*)ft_strnew(32);
+    hash_result = (ft_strcmp("md5", pre_image->com) == 0) ?
+    (unsigned int *)md5_hash(new_length, bit_padding) :
+    (unsigned int *)sha256_hash(new_length, bit_padding);
+    pre_image->digest = bytes2_nibl_2chr((unsigned char *)hash_result, pre_image->digest);
+    return (pre_image);
+}

@@ -14,7 +14,7 @@
 
 int		ft_atoi(const char *str)
 {
-	ULL	num;
+	unsigned long long	num;
 	int					sign;
 
 	while (*str == ' ' || *str == '\t' || *str == '\v' || *str == '\f'

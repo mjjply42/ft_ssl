@@ -21,39 +21,13 @@
 # define S42 10
 # define S43 15
 # define S44 21
-# define F(x, y, z) (((x) & (y)) | ((~x) & (z)))
-# define G(x, y, z) (((x) & (z)) | ((y) & (~z)))
-# define H(x, y, z) ((x) ^ (y) ^ (z))
-# define I(x, y, z) ((y) ^ ((x) | (~z)))
 # define ROTATE_LEFT(x, n) (((x) << (n)) | ((x) >> (32-(n))))
-# define FF(a, b, c, d, x, s, ac) { \
- (a) += F ((b), (c), (d)) + (x) + (ac); \
- (a) = ROTATE_LEFT ((a), (s)); \
- (a) += (b); \
-}
-# define GG(a, b, c, d, x, s, ac) { \
- (a) += G ((b), (c), (d)) + (x) + (ac); \
- (a) = ROTATE_LEFT ((a), (s)); \
- (a) += (b); \
-}
-# define HH(a, b, c, d, x, s, ac) { \
- (a) += H ((b), (c), (d)) + (x) + (ac); \
- (a) = ROTATE_LEFT ((a), (s)); \
- (a) += (b); \
-}
-# define II(a, b, c, d, x, s, ac) { \
- (a) += I ((b), (c), (d)) + (x) + (ac); \
- (a) = ROTATE_LEFT ((a), (s)); \
- (a) += (b); \
-}
-typedef struct		s_mem
-{
-	unsigned char	*data;
-	unsigned int	h[8];
-	int				len;
-}					t_mem;
+# define ROTATE_RIGHT(x, n) (((x) >> (n)) | ((x) << (32-(n))))
+# define RIGHT_SHIFT(x, n) ((x) >> (n))
+# define LEFT_SHIFT(x, n) ((x) << (n))
 
-typedef struct input_info
+
+typedef struct main_info
 {
     char                 *com;
     char                 *input;
@@ -61,36 +35,39 @@ typedef struct input_info
     char                 *stream;
     int                  count;
     bool                 STREAMS;
-    ULL   bit_size;
+    unsigned long long   bit_size;
     bool                 FILES;
+    char                *file_name;
+    unsigned char       *digest;
+    bool                s_error;
 
-} m_s;
+}                        m_s;
 
-typedef struct		s_i
+typedef struct	h_i
 {
-	unsigned int	a;
-	unsigned int	b;
-	unsigned int	c;
-	unsigned int	d;
-	unsigned int	e;
-	unsigned int	f;
-	unsigned int	g;
-	unsigned int	h;
-	unsigned int	t;
-	unsigned int	t2;
-} t_i;
+	uint32_t	(*f)(uint32_t a, uint32_t b, uint32_t c);
+	int		    block;
+	int		    step;
+	uint32_t	signed_constant;
+}				md5_f;
 
-typedef struct after_image
+typedef struct hashing
 {
-    unsigned long long state[4];
-    uint32_t message[16];
-    unsigned char *digest;
+    uint32_t           message[128];
+    uint32_t           a;
+    uint32_t           b;
+    uint32_t           c;
+    uint32_t           d;
+    uint32_t           e;
+    uint32_t           f;
+    uint32_t           g;
+    uint32_t           h;
 
-} h_s;
+}                      h_s;
 
 //Dispatch pointer for the flags, and to assign them
 typedef m_s *(*f_p)(int argc, char **argv, char *str);
-typedef int (*c_p)(m_s *pre_image_data/**, char **argv**/);
+typedef int (*c_p)(m_s *pre_image_data, char **argv);
 
 typedef struct to_comm
 {
@@ -98,7 +75,7 @@ typedef struct to_comm
     c_p     comm_func;
     f_p     flag_func;
 
-} comm_set;
+}           comm_set;
 
 m_s       *init_message_data();
 m_s       *set_flags(m_s *message, char **argv);
@@ -109,19 +86,20 @@ char      *check_error(int argc, char **argv);
 char      *open_file(char **argv, int a);
 char      *open_stream();
 char      *buff_manag(int length, char *buff, char *input);
-int       md5_start(m_s *pre_image_data/*, char **argv*/);
-//char        *sha256_start(int argc, char **argv, char *str);
+int       md5_pad_start(m_s *pre_image_data, char **argv);
+int       sha256_pad_start(m_s *pre_image, char **argv);
 
 void      print_command_opt();
 void      set_struct_data(int argc, char **argv, char *possible_str);
 void      error_code(int a);
 void      special_case(char *str);
-//void      padding(ULL pre_pad_size, m_s *pre_image);
-t_mem	*padding(m_s *pre_image);
-void      md5_hash(unsigned char *message, ULL byte_count);
+void      destroy_data(m_s *pre_image);
+void      print_digest(unsigned char *digest, m_s *pre_image, char **argv);
+m_s	      *padding(m_s *pre_image);
+unsigned char      *md5_hash(unsigned char *message, unsigned long long byte_count);
 void      start_rounds(h_s *hash);
+void	  md5_process(h_s *hash, uint32_t *state);
 
-int       check_command(char **argv);
 int       check_command(char **argv);
 int       set_messages(m_s *message, char **argv);
 int       handle_opts(char **argv, m_s *message);

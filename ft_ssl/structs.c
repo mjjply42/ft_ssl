@@ -13,23 +13,17 @@ m_s        *init_message_data()
     message->stream= NULL;
     message->STREAMS = FALSE;
     ft_memset(message->flags, 0, 4);
+    message->digest = ft_memset((unsigned char*)ft_strnew(32), 0, 32);
+    message->file_name = NULL;
     return (message);
 }
 
-void	ft_free_mem(t_mem *mem)
+void        destroy_data(m_s *pre_image)
 {
-	free(mem->data);
-	free(mem);
-}
-
-void		init_mem(t_mem *mem)
-{
-	mem->h[0] = 0x6a09e667;
-	mem->h[1] = 0xbb67ae85;
-	mem->h[2] = 0x3c6ef372;
-	mem->h[3] = 0xa54ff53a;
-	mem->h[4] = 0x510e527f;
-	mem->h[5] = 0x9b05688c;
-	mem->h[6] = 0x1f83d9ab;
-	mem->h[7] = 0x5be0cd19;
+    //ft_memset(pre_image->digest, 0, 32);
+    pre_image->flags[0] = 0;
+    pre_image->flags[2] = 0;
+    pre_image->flags[3] = 0;
+    pre_image->bit_size = 0;
+    pre_image->FILES = FALSE;
 }

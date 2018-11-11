@@ -15,13 +15,13 @@
 # include <string.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <stdio.h>
 # define MIN_INT -2147483648
 # define MAX_INT 214748364
 # define TRUE 1
 # define FALSE 0
 # define SPACE ft_putchar(' ');
 # define NEW_LINE ft_putchar('\n');
-typedef unsigned long long ULL;
 typedef struct		s_list
 {
 	void			*content;
@@ -82,7 +82,8 @@ char				*ft_addprefix(char *pre, char *str);
 char				*ft_capitalize(char *str);
 char				*ft_nextspace(char *str);
 char      			*ft_strtransfer(const char *s1, const char *s2, unsigned int a);
-unsigned char		*ft_uint32_to_chr(unsigned char *output, unsigned long long *input , unsigned int len);
+unsigned char		*ft_uint32_to_chr(unsigned char *output, uint32_t *input , unsigned int len);
+unsigned char       *bytes2_nibl_2chr(unsigned char *before, unsigned char *after);
 int					ft_atoi(const char *str);
 int					ft_bintodec(int binary);
 int					ft_dectobin(int dec);
@@ -102,6 +103,7 @@ int					ft_strcmp(const char *s1, const char *s2);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 int					ft_strequ(const char *s1, const char *s2);
 int					ft_strnequ(char const *s1, char const *s2, size_t n);
+unsigned int 		swap_byte_uint(unsigned int a);
 size_t				ft_strlen(const char *str);
 size_t				ft_strlcat(char *dst, const char *src, size_t size);
 uint32_t			*ft_char_to_uint32(uint32_t *output, unsigned char *input, unsigned int len);
