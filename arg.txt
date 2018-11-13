@@ -1,0 +1,1 @@
+echo djfldkjdlfk | ./ft_ssl md5
