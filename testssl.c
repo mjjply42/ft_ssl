@@ -52,7 +52,7 @@ void    expand_message(h_s *hash)
     i = 0;
     while (i < 16)
     {
-        hash->exp_message[i] = hash->message[i];
+        hash->exp_message[i] = (hash->message[i]);
         i++;
     }
     while (i < 64)
@@ -61,6 +61,13 @@ void    expand_message(h_s *hash)
 			+ SIG0(hash->exp_message[i - 15])
 			+ hash->exp_message[i - 16];
 		i++;
+    }
+    i = 0;
+    printf("W IS:               M IS\n\n");
+    while (i < 64)
+    {
+        printf("%i      %#.8x                 %#x\n", i, hash->exp_message[i], hash->message[i]);
+        i++;
     }
 }
 
@@ -89,7 +96,7 @@ void  sha256_process(h_s *hash, uint32_t *state)
     state[6] = hash->g + state[6];
     state[7] = hash->h + state[7];
     printf("FINAL:");
-    printf("%x  %x  %x  %x  %x  %x  %x  %x\n", state[0], state[1], state[2], state[3], state[4], state[5], state[7], state[8]);
+    printf("%x  %x  %x  %x  %x  %x  %x  %x\n", state[0], state[1], state[2], state[3], state[4], state[5], state[6], state[7]);
 }
 
 unsigned char   *sha256_hash(unsigned char *message, unsigned long long byte_count)
@@ -119,7 +126,7 @@ unsigned char   *sha256_hash(unsigned char *message, unsigned long long byte_cou
    }
     free(hash);
     str = ft_strnew(32);
-    return (ft_uint32_to_chr((unsigned char *)str, state, sizeof(unsigned long long) * 4));
+    return (ft_uint32_to_chr((unsigned char *)str, state, sizeof(unsigned long long) * 8));
 }
 
 
