@@ -1,5 +1,18 @@
 #include "ft_ssl.h"
+l_s        *init_start_data()
+{
+    l_s *message;
 
+    message = (l_s*)malloc(sizeof(l_s));
+    if (message == NULL)
+        return (NULL);
+    message->input = NULL;
+    message->stream = NULL;
+    message->file_name = NULL;
+    message->FILES = FALSE;
+    message->STREAMS = FALSE;
+    return (message);
+}
 m_s        *init_message_data()
 {
     m_s *message;

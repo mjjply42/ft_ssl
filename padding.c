@@ -1,7 +1,18 @@
 #include "ft_ssl.h"
-unsigned long long    u64_u32_swap(m_s *pre_image)
+void    bit_play(unsigned char *new_length)
 {
-    return ((pre_image->bit_size >> 32) | (pre_image->bit_size << 32));
+    uint32_t *pre_message;
+
+    pre_message = (uint32_t*)malloc(32);
+    printf("3HERE\n");
+    ft_char_to_uint32(pre_message, new_length, sizeof(unsigned long long) * 32);
+    printf("ERTYUI %#x\n", pre_message[14]);
+    int l = -1;
+    while (++l < 32)
+        pre_message[l] = swap_byte_uint((unsigned int)pre_message[l]);
+    printf("DFGHJK %#x\n", pre_message[14]);
+    ft_bzero(new_length, 127);
+    ft_uint32_to_chr(new_length, pre_message, sizeof(unsigned long long) * 32);
 }
 
 int        pad_check(unsigned long long len)
@@ -21,7 +32,7 @@ m_s       *padding(m_s *pre_image)
     unsigned long long bit_padding;
     unsigned int *hash_result;
     unsigned long long z;
-
+ 
     ft_bzero(new_length, 127);
     padding = pad_check(pre_image->bit_size);
     bit_padding = (pre_image->bit_size + 64 + 1 + padding);
@@ -34,15 +45,7 @@ m_s       *padding(m_s *pre_image)
     //turn from char to uint32
     //turn from uint32 to char
     //u64_u32_swap(pre_image);
-    uint32_t *pre_message = (uint32_t*)malloc(32);
-    ft_char_to_uint32(pre_message, new_length, sizeof(unsigned long long) * 32);
-    printf("ERTYUI %#x\n", pre_message[14]);
-    int l = -1;
-    while (++l < 32)
-        pre_message[l] = swap_byte_uint((unsigned int)pre_message[l]);
-    printf("DFGHJK %#x\n", pre_message[14]);
-    ft_bzero(new_length, 127);
-    ft_uint32_to_chr(new_length, pre_message, sizeof(unsigned long long) * 32);
+    bit_play(new_length);
     z = ((pre_image->bit_size >> 32) | (pre_image->bit_size << 32));
     printf("AFTER %#llx", z);
     ft_memcpy((new_length + (pre_image->bit_size / 8 + 1) + (padding / 8)), (unsigned long long *)&z, 8);
@@ -51,10 +54,6 @@ m_s       *padding(m_s *pre_image)
     printf("PADDING IS %llu\n", padding);
     printf("PRE_IMAGE BIT SIZE IS %llu\n", pre_image->bit_size);
     printf("BIT PADDING IS %llu\n", bit_padding);
-    unsigned long long w = 0xF0F0;
-    //unsigned long long v = 0;
-    //v = ((w >> 32) | (w << 32));
-    printf("%#llx\n", w);
     int b = -1;
     while (++b < 128)
         printf("%i:        %u\n",b, new_length[b]);
@@ -68,5 +67,6 @@ m_s       *padding(m_s *pre_image)
     while (++i < 64)
         printf("%x", pre_image->digest[i]);
     printf("\n");
+    
     return (pre_image);
 }

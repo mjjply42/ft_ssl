@@ -33,7 +33,7 @@
 # define LEFT_SHIFT(x, n) ((x) << (n))
 
 
-typedef struct main_info
+typedef struct message_info
 {
     char                 *com;
     char                 *input;
@@ -47,6 +47,16 @@ typedef struct main_info
     unsigned char       *digest;
     bool                s_error;
 }                        m_s;
+
+typedef struct main_info
+{
+    char                *stream;
+    char                *input;
+    char                *file_name;
+    bool                FILES;
+    bool                STREAMS;
+
+}                       l_s;
 
 typedef struct	h_i
 {
@@ -71,8 +81,8 @@ typedef struct hashing
 }                      h_s;
 
 //Dispatch pointer for the flags, and to assign them
-typedef m_s *(*f_p)(int argc, char **argv, char *str);
-typedef int (*c_p)(m_s *pre_image_data, char **argv);
+typedef m_s *(*f_p)(int argc, char **argv, l_s *pre_data);
+typedef int (*c_p)(m_s *pre_image_data, char **argv, int argc);
 
 typedef struct to_comm
 {
@@ -99,8 +109,8 @@ void      destroy_data(m_s *pre_image);
 void      print_digest(unsigned char *digest, m_s *pre_image, char **argv);
 void      start_rounds(h_s *hash);
 void	  md5_process(h_s *hash, uint32_t *state);
-int       md5_pad_start(m_s *pre_image_data, char **argv);
-int       sha256_pad_start(m_s *pre_image, char **argv);
+int       md5_pad_start(m_s *pre_image_data, char **argv, int argc);
+int       sha256_pad_start(m_s *pre_image, char **argv, int argc);
 int       check_command(char **argv);
 int       set_messages(m_s *message, char **argv);
 int       handle_opts(char **argv, m_s *message);

@@ -42,7 +42,7 @@ void    compress_message(int i, h_s *hash)
     hash->c = hash->b;
     hash->b = hash->a;
     hash->a = t[0] + t[1];
-    printf("%x  %x  %x  %x  %x  %x  %x  %x\n", hash->a, hash->b, hash->c, hash->d, hash->e, hash->f, hash->g, hash->h);
+    printf("%.8x  %.8x  %.8x  %.8x  %.8x  %.8x  %.8x  %.8x\n", hash->a, hash->b, hash->c, hash->d, hash->e, hash->f, hash->g, hash->h);
 }
 
 void    expand_message(h_s *hash)
@@ -96,7 +96,7 @@ void  sha256_process(h_s *hash, uint32_t *state)
     state[6] = hash->g + state[6];
     state[7] = hash->h + state[7];
     printf("FINAL:");
-    printf("%x  %x  %x  %x  %x  %x  %x  %x\n", state[0], state[1], state[2], state[3], state[4], state[5], state[6], state[7]);
+    printf("%.8x  %.8x  %.8x  %.8x  %.8x  %.8x  %.8x  %.8x\n", state[0], state[1], state[2], state[3], state[4], state[5], state[6], state[7]);
 }
 
 unsigned char   *sha256_hash(unsigned char *message, unsigned long long byte_count)
@@ -131,28 +131,34 @@ unsigned char   *sha256_hash(unsigned char *message, unsigned long long byte_cou
 
 
 
-int       sha256_pad_start(m_s *pre_image, char **argv)
+int       sha256_pad_start(m_s *pre_image, char **argv, int argc)
 {
     int i;
 
     i = pre_image->count;
     printf("ARGV IS %s\n", *(argv + pre_image->count));
-    if (ft_strcmp("-p", argv[2]) == 0)
-        pre_image->flags[0] = pre_image->STREAMS = 1;
+    if (argc > 2)
+    {
+        printf("ARGV2 IS %s\n", *argv);
+        printf("I is %i\n", i);
+        if (ft_strcmp("-p", *(argv + pre_image->count - 1)) == 0)
+            pre_image->flags[0] = pre_image->STREAMS = 1;
+    }
     printf("%i\n", pre_image->flags[1]);
-    printf("!INPUT %s\n", pre_image->input);
+    printf("INPUT %s\n", pre_image->input);
     if (pre_image->STREAMS != FALSE || pre_image->flags[0] == 1)
     {
         pre_image->bit_size = (ft_strlen(pre_image->stream) * 8);
         printf("HEL\n");
         padding(pre_image);
         printf("HELLOOO\n");
-        print_digest(pre_image->digest, pre_image, argv);
+        //print_digest(pre_image->digest, pre_image, argv);
         pre_image->STREAMS = pre_image->bit_size = 0;
         //free(pre_image->stream);
     }
     if (pre_image->input != NULL)
     {
+        printf("dasfdghjjk");
         pre_image->bit_size = (ft_strlen(pre_image->input) * 8);
         printf("HERE\n");
         printf("BIT SIZE %llu\n", pre_image->bit_size);
@@ -163,5 +169,5 @@ int       sha256_pad_start(m_s *pre_image, char **argv)
     if (pre_image->s_error == TRUE)
         error_code(3);
     //destroy_data(pre_image);
-    return (i += 1);
+    return (i + 1);
 }

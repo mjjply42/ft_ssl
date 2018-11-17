@@ -55,6 +55,7 @@ void       set_struct_data(int argc, char **argv, char *possible_str)
     {
         if (ft_strequ(array[i].com, argv[1]) == 1)
         {
+            printf("1HELLO\n");
            flag = array[i].flag_func;
            command = array[i].comm_func;
         }
@@ -63,10 +64,10 @@ void       set_struct_data(int argc, char **argv, char *possible_str)
     i = 0;
     while (i < argc)
     {
-        //printf("%i and %i\n", i, argc);
-        //printf("ARGV IS %s\n", *(argv + i));
-        i += command(flag(argc, argv + i, possible_str), argv);
-        //printf("I IS %i\n", i);
+        printf("%i and %i\n", i, argc);
+        printf("ARGV IS %s\n", *(argv + i));
+        i += command(flag(argc, argv + i, possible_str), argv, argc);
+        printf("I IS %i\n", i);
     }
 }
 int      check_command(char **argv)
@@ -93,6 +94,7 @@ int        main(int argc, char **argv)
     
     possible_str = NULL;
     ret = 0;
+    printf("ARGC is %i\n", argc);
     if ((ret = check_command(argv)) == 0)
         return (0);
     if (argc < 2)

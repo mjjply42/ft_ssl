@@ -47,7 +47,7 @@ char       *check_error(int argc, char **argv)
     if (argc == 2)
     {
         input = open_stream();
-        //printf("input is %s\n", input);
+        printf("input is %s\n", input);
     }
     if (argc == 3)   
     {
