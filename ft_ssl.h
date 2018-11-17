@@ -90,19 +90,19 @@ typedef struct to_comm
     c_p     comm_func;
     f_p     flag_func;
 }           comm_set;
-
+l_s       *init_start_data();
 m_s       *init_message_data();
 m_s       *set_flags(m_s *message, char **argv);
 m_s       *handle_flags(int argc, char **argv, char *str);
 m_s	      *padding(m_s *pre_image);
-char      *check_error(int argc, char **argv);
+void      check_error(int argc, char **argv, l_s *pre_data);
 char      *open_file(char **argv, int a);
 char      *open_stream();
 char      *buff_manag(int length, char *buff, char *input);
 unsigned char      *md5_hash(unsigned char *message, unsigned long long byte_count);
 unsigned char      *sha256_hash(unsigned char *message, unsigned long long byte_count);
 void      print_command_opt();
-void      set_struct_data(int argc, char **argv, char *possible_str);
+void      set_struct_data(int argc, char **argv, l_s *pre_data);
 void      error_code(int a);
 void      special_case(char *str);
 void      destroy_data(m_s *pre_image);
