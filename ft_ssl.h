@@ -53,8 +53,11 @@ typedef struct main_info
     char                *stream;
     char                *input;
     char                *file_name;
+    char                *com;
+    int                 count;
     bool                FILES;
-    bool                STREAMS;
+    bool                R;
+    bool                Q;
 
 }                       l_s;
 
@@ -82,7 +85,7 @@ typedef struct hashing
 
 //Dispatch pointer for the flags, and to assign them
 typedef m_s *(*f_p)(int argc, char **argv, l_s *pre_data);
-typedef int (*c_p)(m_s *pre_image_data, char **argv, int argc);
+typedef int (*c_p)(m_s *pre_image_data, char **argv);
 
 typedef struct to_comm
 {
@@ -93,7 +96,7 @@ typedef struct to_comm
 l_s       *init_start_data();
 m_s       *init_message_data();
 m_s       *set_flags(m_s *message, char **argv);
-m_s       *handle_flags(int argc, char **argv, char *str);
+m_s       *handle_flags(int argc, char **argv, l_s *pre_data);
 m_s	      *padding(m_s *pre_image);
 void      check_error(int argc, char **argv, l_s *pre_data);
 char      *open_file(char **argv, int a);
@@ -104,15 +107,15 @@ unsigned char      *sha256_hash(unsigned char *message, unsigned long long byte_
 void      print_command_opt();
 void      set_struct_data(int argc, char **argv, l_s *pre_data);
 void      error_code(int a);
-void      special_case(char *str);
+void      special_case(char *str, int a);
 void      destroy_data(m_s *pre_image);
 void      print_digest(unsigned char *digest, m_s *pre_image, char **argv);
 void      start_rounds(h_s *hash);
 void	  md5_process(h_s *hash, uint32_t *state);
-int       md5_pad_start(m_s *pre_image_data, char **argv, int argc);
-int       sha256_pad_start(m_s *pre_image, char **argv, int argc);
+int       md5_pad_start(m_s *pre_image_data, char **argv);
+int       sha256_pad_start(m_s *pre_image, char **argv);
 int       check_command(char **argv);
-int       set_messages(m_s *message, char **argv);
+void       set_messages(m_s *message, char **argv);
 int       handle_opts(char **argv, m_s *message);
 
 #endif

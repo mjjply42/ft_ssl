@@ -2,8 +2,10 @@
 void    bit_play(unsigned char *new_length)
 {
     uint32_t *pre_message;
-
-    pre_message = (uint32_t*)malloc(32);
+    printf("qwretjykui\n");
+    pre_message = (uint32_t*)ft_memalloc(ft_strlen((const char*)new_length)/4);
+    if (pre_message == NULL)
+        printf("htrjyvub");
     printf("3HERE\n");
     ft_char_to_uint32(pre_message, new_length, sizeof(unsigned long long) * 32);
     printf("ERTYUI %#x\n", pre_message[14]);
@@ -13,6 +15,7 @@ void    bit_play(unsigned char *new_length)
     printf("DFGHJK %#x\n", pre_message[14]);
     ft_bzero(new_length, 127);
     ft_uint32_to_chr(new_length, pre_message, sizeof(unsigned long long) * 32);
+    free(pre_message);
 }
 
 int        pad_check(unsigned long long len)
@@ -28,16 +31,17 @@ int        pad_check(unsigned long long len)
 m_s       *padding(m_s *pre_image)
 {
     unsigned long long padding;
-    unsigned char new_length[128];
+    unsigned char *new_length;
     unsigned long long bit_padding;
     unsigned int *hash_result;
     unsigned long long z;
  
-    ft_bzero(new_length, 127);
     padding = pad_check(pre_image->bit_size);
     bit_padding = (pre_image->bit_size + 64 + 1 + padding);
-    ft_memcpy(&new_length, ((pre_image->STREAMS) ? pre_image->stream : pre_image->input),\
+    new_length = ft_memalloc(ft_strlen((pre_image->stream != NULL) ? pre_image->stream + 65 + padding : pre_image->input + 65 + padding));
+    ft_memcpy(new_length, ((pre_image->stream != NULL) ? pre_image->stream : pre_image->input),\
      (pre_image->bit_size / 8));
+     printf("NEW LEN IS %s\n", new_length);
     new_length[pre_image->bit_size / 8] = 0x80;
     ft_bzero(new_length + (pre_image->bit_size / 8) + 1, (padding / 8));
     //bigchar_32bit_swap(new_length);
@@ -45,6 +49,7 @@ m_s       *padding(m_s *pre_image)
     //turn from char to uint32
     //turn from uint32 to char
     //u64_u32_swap(pre_image);
+    printf("1HELLO\n");
     bit_play(new_length);
     z = ((pre_image->bit_size >> 32) | (pre_image->bit_size << 32));
     printf("AFTER %#llx", z);
@@ -55,9 +60,13 @@ m_s       *padding(m_s *pre_image)
     printf("PRE_IMAGE BIT SIZE IS %llu\n", pre_image->bit_size);
     printf("BIT PADDING IS %llu\n", bit_padding);
     int b = -1;
-    while (++b < 128)
+    printf("COM%s\n", pre_image->com);
+    while (new_length[++b] != '\0')
         printf("%i:        %u\n",b, new_length[b]);
+    printf("txghtytjrjc6fu");
     pre_image->digest = (unsigned char*)ft_strnew(32);
+    printf("2HERE\n");
+    printf("COM%s\n", pre_image->com);
     hash_result = (ft_strcmp("md5", pre_image->com) == 0) ?
     (unsigned int *)md5_hash(new_length, bit_padding) :
     (unsigned int *)sha256_hash(new_length, bit_padding);
@@ -67,6 +76,6 @@ m_s       *padding(m_s *pre_image)
     while (++i < 64)
         printf("%x", pre_image->digest[i]);
     printf("\n");
-    
+    free(new_length);
     return (pre_image);
 }

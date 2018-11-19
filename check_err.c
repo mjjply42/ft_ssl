@@ -33,11 +33,18 @@ void        error_code(int a)
         exit(0);
     }
 }
-void        special_case(char *argv)
+void        special_case(char *argv, int a)
 {
-    printf("md5: %s: No such file or directory\n", argv);
+    if (a == 0)
+        printf("md5: %s: No such file or directory\n", argv);
+    if (a == 1)
+    {
+        printf("md5: illegal option -- %c\nusage: \
+        md5 [-pqrtx] [-s string] [files ...]", argv[1]);
+        exit (0);
+    }
 }
-char       *check_error(int argc, char **argv)
+/*char       *check_error(int argc, char **argv)
 {
     int ret;
     char *input;
@@ -63,4 +70,30 @@ char       *check_error(int argc, char **argv)
         }
     }
     return (input);
+}*/
+
+void        check_error(int argc, char **argv, l_s *info)
+{
+    if (argc == 2)
+        info->stream = open_stream();
+    if (argc == 3)
+    {
+        if ((ft_strequ("-s", argv[2])) == 0)
+        {
+            info->input = open_file(argv, 2);
+            if (info->input == NULL)
+                info->stream = open_stream();
+            else
+            {
+                info->file_name = argv[2];
+                info->FILES = TRUE;
+            }
+        }
+        else
+        {
+            error_code(3);
+            exit(0);
+        }
+    }
+    
 }

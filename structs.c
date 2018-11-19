@@ -10,7 +10,7 @@ l_s        *init_start_data()
     message->stream = NULL;
     message->file_name = NULL;
     message->FILES = FALSE;
-    message->STREAMS = FALSE;
+    message->count = 0;
     return (message);
 }
 m_s        *init_message_data()

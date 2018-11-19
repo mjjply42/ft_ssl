@@ -24,22 +24,11 @@ unsigned char    *md5_hash(unsigned char *message, unsigned long long byte_count
    return (ft_uint32_to_chr((unsigned char *)str, state, sizeof(unsigned long long) * 4));
 }
 
-int     md5_pad_start(m_s *pre_image, char **argv, int argc)
+int     md5_pad_start(m_s *pre_image, char **argv)
 {
-    int i;
-
-    i = pre_image->count;
-    printf("ARGV IS %s\n", *(argv + pre_image->count));
-    if (argc > 2)
-    {
-        printf("ARGV2 IS %s\n", *argv);
-        printf("I is %i\n", i);
-        if (ft_strcmp("-p", *(argv + pre_image->count - 1)) == 0)
-            pre_image->flags[0] = pre_image->STREAMS = 1;
-    }
     printf("%i\n", pre_image->flags[1]);
     printf("INPUT %s\n", pre_image->input);
-    if (pre_image->STREAMS != FALSE || pre_image->flags[0] == 1)
+    if (pre_image->STREAMS != FALSE)
     {
         pre_image->bit_size = (ft_strlen(pre_image->stream) * 8);
         printf("HEL\n");
@@ -62,7 +51,7 @@ int     md5_pad_start(m_s *pre_image, char **argv, int argc)
     if (pre_image->s_error == TRUE)
         error_code(3);
     //destroy_data(pre_image);
-    return (i);
+    return (pre_image->count);
 }
 
 
